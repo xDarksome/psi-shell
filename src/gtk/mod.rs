@@ -1,5 +1,6 @@
 mod bar;
 mod circular_progress;
+mod desktop;
 mod gauge;
 mod icon;
 
@@ -11,6 +12,7 @@ use gtk::{gdk, glib};
 use crate::{CommandSender, Event, EventReceiver};
 
 use bar::Bar;
+use desktop::Desktop;
 use gauge::Gauge;
 use icon::Icon;
 
@@ -21,6 +23,7 @@ impl LayerShell {
         gtk::init().unwrap();
 
         let mut bar = Bar::new(cmds);
+        let _ = Desktop::new();
 
         if let Some(screen) = gdk::Screen::default() {
             let provider = gtk::CssProvider::new();
