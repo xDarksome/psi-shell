@@ -1,6 +1,0 @@
-{
-    "rust-analyzer.rustfmt.extraArgs": [
-        "+nightly"
-    ],
-    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix"
-}
