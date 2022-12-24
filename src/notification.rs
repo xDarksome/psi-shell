@@ -52,9 +52,7 @@ impl Server {
         Ok((name, vendor, version, spec_version))
     }
 
-    fn get_capabilities(&mut self) -> zbus::fdo::Result<Vec<&str>> {
-        Ok(vec![])
-    }
+    fn get_capabilities(&mut self) -> zbus::fdo::Result<Vec<&str>> { Ok(vec![]) }
 }
 
 pub fn run_server(ev_tx: EventSender) {

@@ -70,7 +70,9 @@ fn emit_events(mut tx: EventSender) {
 
     loop {
         for res in [
-            Ok(Event::BatteryChargeUpdated(info.battery_perc())),
+            info.battery_perc()
+                .map(Event::BatteryChargeUpdated)
+                .map_err(|e| format!("Failed to get battery capacity: {e}")),
             Ok(Event::RamUsageUpdated(info.ram_perc())),
             Ok(Event::CpuUsageUpdated(info.cpu_perc())),
             Ok(Event::ClockUpdated(Clock::now())),

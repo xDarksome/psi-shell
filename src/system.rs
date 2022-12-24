@@ -7,9 +7,14 @@ pub struct Info {
 impl Info {
     pub fn new() -> Self { Self { system: sysinfo::System::new() } }
 
-    pub fn battery_perc(&mut self) -> u8 {
-        // TODO
-        0
+    pub fn battery_perc(&mut self) -> Result<u8, String> {
+        const PATH: &str = "/sys/class/power_supply/BAT0/capacity";
+
+        std::fs::read_to_string(PATH)
+            .map_err(|e| format!("Failed to read `{PATH}`: {e}"))?
+            .trim()
+            .parse()
+            .map_err(|e| format!("Failed to parce battery capacity percentage: {e}"))
     }
 
     pub fn disk_perc(&mut self, mount_point: &str) -> Option<u8> {
