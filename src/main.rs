@@ -3,6 +3,7 @@
 mod audio;
 mod clock;
 mod gtk;
+mod notification;
 mod process;
 mod screen;
 mod system;
@@ -14,6 +15,7 @@ use std::{sync, thread};
 use futures::channel::mpsc;
 
 pub use clock::Clock;
+pub use notification::Notification;
 
 fn main() {
     pretty_env_logger::init();
@@ -23,6 +25,7 @@ fn main() {
 
     let _ = thread::spawn(capture(&ev_tx, emit_events));
     let _ = thread::spawn(capture(&ev_tx, publish_wm_events));
+    let _ = thread::spawn(capture(&ev_tx, notification::run_server));
     let _ = thread::spawn(move || handle_commands(cmd_rx, ev_tx));
 
     gtk::LayerShell::launch(cmd_tx, ev_rx)
@@ -59,6 +62,7 @@ pub enum Event {
     WifiConnected,
     WifiDisconnected,
     ClockUpdated(Clock),
+    NotificationCreated(Notification),
 }
 
 fn emit_events(mut tx: EventSender) {

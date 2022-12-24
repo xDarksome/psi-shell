@@ -1,5 +1,6 @@
 use gtk::prelude::*;
 
+#[derive(Clone, Debug)]
 pub struct Icon {
     pub widget: gtk::Image,
 
@@ -8,6 +9,10 @@ pub struct Icon {
 }
 
 impl Icon {
+    pub fn empty(size: i32) -> Self {
+        Self { widget: gtk::Image::new(), fallback_name: String::new(), size }
+    }
+
     pub fn new(name: &str, size: i32) -> Self { Self::with_fallback(name, "", size) }
 
     pub fn with_fallback(name: &str, fallback_name: &str, size: i32) -> Self {
@@ -24,7 +29,7 @@ impl Icon {
         }
     }
 
-    fn try_update(&mut self, name: &str) -> Result<(), String> {
+    pub fn try_update(&mut self, name: &str) -> Result<(), String> {
         let theme =
             gtk::IconTheme::default().ok_or_else(|| "GTK icon theme is missing".to_string())?;
         let flags = gtk::IconLookupFlags::empty();

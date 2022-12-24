@@ -31,11 +31,10 @@ impl Bar {
     pub fn new(cmds: CommandSender) -> Self {
         use gtk_layer_shell::{Edge, Layer};
 
-        let left_padding = gtk::Box::builder().width_request(20).build();
         let hardware_metrics = Metrics::new();
+        hardware_metrics.widget.set_margin_start(20);
 
         let left = gtk::Box::builder().halign(Align::Start).homogeneous(false).build();
-        left.add(&left_padding);
         left.add(&hardware_metrics.widget);
 
         let workspaces = Workspaces::new(cmds.clone());
@@ -46,6 +45,7 @@ impl Bar {
         let tweaks = Tweaks::new(cmds.clone());
         let wifi = Wifi::new(cmds);
         let clock = Clock::new();
+        clock.widget.set_margin_end(20);
 
         let right = gtk::Box::builder().halign(Align::End).homogeneous(false).build();
         right.add(&tweaks.widget);
@@ -53,7 +53,6 @@ impl Bar {
         right.add(&wifi.widget);
         right.add(&gtk::Box::builder().width_request(20).build());
         right.add(&clock.widget);
-        right.add(&gtk::Box::builder().width_request(20).build());
 
         let centerbox = gtk::Box::new(gtk::Orientation::Horizontal, 0);
         centerbox.pack_start(&left, true, true, 0);

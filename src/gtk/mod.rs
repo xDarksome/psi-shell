@@ -3,6 +3,7 @@ mod circular_progress;
 mod desktop;
 mod gauge;
 mod icon;
+mod notification_popup;
 
 use circular_progress::CircProg;
 use futures::StreamExt;
@@ -15,6 +16,7 @@ use bar::Bar;
 use desktop::Desktop;
 use gauge::Gauge;
 use icon::Icon;
+use notification_popup::NotificationPopup;
 
 pub struct LayerShell {}
 
@@ -24,6 +26,7 @@ impl LayerShell {
 
         let mut bar = Bar::new(cmds);
         let _ = Desktop::new();
+        let mut notif_popup = NotificationPopup::new();
 
         if let Some(screen) = gdk::Screen::default() {
             let provider = gtk::CssProvider::new();
@@ -56,6 +59,8 @@ impl LayerShell {
                     Event::WifiConnected => bar.wifi.mark_connected(),
                     Event::WifiDisconnected => bar.wifi.mark_disconnected(),
                     Event::ClockUpdated(c) => bar.clock.update(c.hour, c.minute),
+                    Event::NotificationCreated(n) =>
+                        notif_popup.show(&n.app_icon, &n.summary, &n.body),
                 }
                 bar.workspaces.widget.show_all();
             }
@@ -115,5 +120,23 @@ const CSS: &str = "
 
     .clock {
         font-size: 21px;
+    }
+
+    .notification-popup {
+        border-radius: 16px;
+        border-width: 1px;
+        border-color: #84ffff;
+        border-style: solid;
+    }
+
+    .notification-popup-title {
+        color: #8F93A2;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .notification-popup-body {
+        color: #4B526D;
+        font-size: 14px;
     }
 ";
