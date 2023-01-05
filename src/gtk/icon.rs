@@ -30,8 +30,8 @@ impl Icon {
     }
 
     pub fn try_update(&mut self, name: &str) -> Result<(), String> {
-        let theme =
-            gtk::IconTheme::default().ok_or_else(|| "GTK icon theme is missing".to_string())?;
+        let theme = gtk::IconTheme::new();
+        theme.set_custom_theme(Some("Psi-Shell"));
         let flags = gtk::IconLookupFlags::empty();
 
         let pixbuf = match theme.lookup_icon(name, self.size, flags) {
